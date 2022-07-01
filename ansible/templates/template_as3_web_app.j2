@@ -1,0 +1,41 @@
+"{{item.value.app_name}}": {
+    "class": "Application",
+    "template": "generic",
+    "{{item.value.app_fqdn}}_vs": {
+        "class": "Service_HTTP",
+        {% if upgrade is not defined %}
+        "virtualAddresses": [
+            "{{item.value.app_locations.prod_vip_address}}"
+        ],
+        {% else %}
+        "virtualAddresses": [
+            "{{item.value.app_locations.alternate_vip_address}}"
+        ],
+        {% endif %}
+        "pool": "{{item.value.app_fqdn}}_pool",
+        "iRules": [
+            "respond200"
+          ]
+    },
+    "{{item.value.app_fqdn}}_pool": {
+        "class": "Pool",
+        "members": [
+            {% for member in item.value.app_locations.pool_members %}
+            {
+                "servicePort": {{item.value.server_port}},
+                "serverAddresses": [
+                    "{{ member.ip }}"
+                ],
+                "adminState": "{{ member.state}}"
+            }
+            {% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    },
+    "respond200": {
+        "class": "iRule",
+        "iRule": {
+            "base64": "d2hlbiBIVFRQX1JFUVVFU1QgewogICBzZXQgYmlnaXBOYW1lICRzdGF0aWM6OnRjbF9wbGF0Zm9ybShtYWNoaW5lKQogICBIVFRQOjpyZXNwb25kIDIwMCBjb250ZW50ICJcblxuICBZb3UgaGF2ZSByZWFjaGVkXG5cbiAgICAgJGJpZ2lwTmFtZSIKfQ=="
+        }
+    }
+}

@@ -1,0 +1,38 @@
+
+- name: set whichBIGIP to origBIGIP
+  set_fact:
+    whichBIGIP: "{{origBIGIP}}"
+
+- name: debug
+  debug:
+    msg: "Pre - Here is whichBIGIP value: {{whichBIGIP}}"
+
+- name: Switch based on upgradePlay variable
+  set_fact:
+    whichBIGIP: "{{upgradeBIGIP}}"
+  when: "{{upgradePlay}} is true"
+
+- name: debug
+  debug:
+    msg: "Post - Here is whichBIGIP value: {{whichBIGIP}}"
+
+- name: Init, Plan, Apply Terraform
+  shell: |
+    cd {{terraform_path}}/{{whichBIGIP}};
+    {{awsCreds}}
+    terraform init;
+    terraform apply --auto-approve
+  register: init
+  failed_when: init.rc not in [0,1]
+
+- name: Print result of terraform apply
+  debug:
+    msg: "{{init}}"
+
+- name: Terraform Output
+  shell: |
+    cd {{terraform_path}}/{{whichBIGIP}};
+    terraform output -json > ../../ansible/artifacts/{{whichBIGIP}}/terraform_outputs_bigip.json
+  register: terraformOutput
+
+

@@ -1,0 +1,15 @@
+app20:
+  app_name: app20
+  tenant: lineOfBusiness20
+  app_template: template_as3_web_app
+  server_port: 80
+  app_fqdn: app20.example.com
+  app_locations:
+    datacenter_name: virtual_DataCenter
+    prod_vip_address: 10.1.10.240
+    alternate_vip_address: 10.1.10.240
+    pool_members:
+      - ip: 192.168.10.20
+        state: enable
+      - ip: 192.168.10.21
+        state: enable

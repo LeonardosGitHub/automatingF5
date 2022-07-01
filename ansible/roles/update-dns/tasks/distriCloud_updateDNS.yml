@@ -1,0 +1,27 @@
+---
+
+- name: PUT to F5 Distributed Cloud Call to update DNS
+  uri:
+    url: "https://console.ves.volterra.io/api/config/dns/namespaces/system/dns_zones/{{FQDN}}"
+    method: PUT
+    status_code: 200
+    headers:
+      Authorization: "{{F5DistCloudToken}}"
+    body: "{{ lookup('template', '~/automatingF5/ansible/templates/template_dnsUpdate.j2') }}"
+    body_format: json
+
+
+- name: GET to F5 Distributed Cloud Call DNS configuration
+  uri:
+    url: "https://console.ves.volterra.io/api/config/dns/namespaces/system/dns_zones/{{FQDN}}"
+    method: GET
+    status_code: 200
+    headers:
+      Authorization: "{{F5DistCloudToken}}"
+  register: GET_DNSoutput
+
+- name: Print results of GET DNS configuration
+  debug:
+    msg: "{{GET_DNSoutput.json}}"
+
+

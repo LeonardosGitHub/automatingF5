@@ -1,0 +1,15 @@
+---
+- name: REST Call to check if AS3 is ready for POST
+  uri:
+    url: "https://{{terraform_outputs_bigip.f5vm01_mgmt_public_ip.value}}:{{server_port}}/mgmt/shared/appsvcs/info"
+    method: GET
+    return_content: yes
+    status_code: [200, 202]
+    user: "{{user}}"
+    password: "{{password}}"
+    force_basic_auth: yes
+    validate_certs: no
+  register: AS3_task_check
+  until: ("3.36.0" in AS3_task_check.json.version)
+  retries: 40
+  delay: 15

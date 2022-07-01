@@ -1,0 +1,22 @@
+
+
+- import_tasks: terraformStart.yml
+
+- import_tasks: whosActive.yml
+
+- import_tasks: bigip_appSOTFiles.yml
+
+- import_tasks: clone_app_repo.yml
+
+- import_tasks: bigip_as3CheckIfReady.yml
+
+- import_tasks: bigip_appIntentData_get.yml
+
+- include_tasks: bigip_as3Onboarding.yml
+  with_items:
+    - "{{dir_out.stdout_lines}}"
+  loop_control:
+    loop_var: outer_item
+
+- include_tasks: distriCloud_updateDNS.yml
+    

@@ -1,0 +1,43 @@
+---
+
+- name: REST Call to get active/standby 
+  uri:
+    url: "https://{{terraform_outputs_bigip.f5vm01_mgmt_public_ip.value}}:{{server_port}}/mgmt/tm/cm/device?$select=name,failoverState,configsyncIp"
+    method: GET
+    return_content: yes
+    status_code: 200
+    user: "{{user}}"
+    password: "{{password}}"
+    force_basic_auth: yes
+    validate_certs: no
+  register: actStand_task_check
+
+- name: set fact
+  set_fact:
+    actStand: "{{ actStand_task_check | json_query(query_json) }}"
+  vars: 
+    query_json: >
+      json.items[]
+
+- name: debug
+  debug:
+    msg: "Current [0] config sync addr: {{actStand[0].configsyncIp}} and active/standby: {{actStand[0].failoverState}}"
+
+- name: debug
+  debug:
+    msg: "{{terraform_outputs_bigip.f5vm01_int_private_ip.value}}"
+
+- name: set VIP private IP of active device
+  set_fact:
+    vipAddressActive: "{{terraform_outputs_bigip.f5vm01_ext_secondary_ip.value}}"
+  when: "(actStand[0].configsyncIp == terraform_outputs_bigip.f5vm01_int_private_ip.value) and (actStand[0].failoverState == \"active\")"
+
+- name: set VIP private IP of active device
+  set_fact:
+    vipAddressActive: "{{terraform_outputs_bigip.f5vm02_ext_secondary_ip.value}}"
+  when: "(actStand[1].configsyncIp == terraform_outputs_bigip.f5vm02_int_private_ip.value) and (actStand[1].failoverState == \"active\")"
+
+- name: debug
+  debug:
+    msg: "{{vipAddressActive}}"
+

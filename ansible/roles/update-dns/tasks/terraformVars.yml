@@ -1,0 +1,35 @@
+
+
+- name: set whichBIGIP to origBIGIP
+  set_fact:
+    whichBIGIP: "{{origBIGIP}}"
+
+- name: debug
+  debug:
+    msg: "Pre - Here is whichBIGIP value: {{whichBIGIP}}"
+
+- name: Switch based on upgradePlay variable
+  set_fact:
+    whichBIGIP: "{{upgradeBIGIP}}"
+  when: "{{upgradePlay}} is true"
+
+- name: debug
+  debug:
+    msg: "Post - Here is whichBIGIP value: {{whichBIGIP}}"
+
+- name: Set upgrade to true if this is upgrade Playbook, this will select "alternate" vip address
+  set_fact:
+    upgrade: true
+  when: "{{upgradePlay}} is true"
+
+- name: Terraform Output
+  shell: |
+    cd {{terraform_path}}/{{whichBIGIP}};
+    terraform output -json > ../../ansible/artifacts/{{whichBIGIP}}/terraform_outputs_bigip.json
+  register: terraformOutput
+
+- name: Load BIG-IP terraform output as variables
+  include_vars: 
+    file: ../artifacts/{{whichBIGIP}}/terraform_outputs_bigip.json
+    name: terraform_outputs_bigip
+

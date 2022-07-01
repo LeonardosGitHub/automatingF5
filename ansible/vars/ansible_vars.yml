@@ -1,0 +1,28 @@
+
+# Terraform path
+terraform_path: ../../terraform
+origBIGIP: BIG_IPs
+upgradeBIGIP: BIG_IPsNew
+# if false will run ../terraform/BIG_IPs; if true will run ../terraform/BIG_IPsNew
+upgradePlay: false
+
+# AnO URLs
+as3uri: mgmt/shared/appsvcs/declare
+taskuri: mgmt/shared/appsvcs/task
+
+# AWS credentials using STS
+awsCreds: >
+  export AWS_ACCESS_KEY_ID="<<<--- KEY HERE --->>>";
+  export AWS_SECRET_ACCESS_KEY="<<<--- ACCESS KEY HERE --->>>";
+  export AWS_SESSION_TOKEN="<<<--- TOKEN HERE --->>>";
+
+
+#BIG-IP info
+server_port: 443
+user: admin
+password: <password>
+validate_certs: no
+
+
+F5DistCloudToken: <tokenHere>
+FQDN: demo.example.com

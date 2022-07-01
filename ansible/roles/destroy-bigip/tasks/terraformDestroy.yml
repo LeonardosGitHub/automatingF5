@@ -1,0 +1,47 @@
+- name: Destroy BIG-IPs Terraform ../terraform/BIG_IPs
+  shell: |
+    cd {{terraform_path}}/{{origBIGIP}};
+    {{awsCreds}}
+    terraform destroy --auto-approve
+  register: destroy
+
+- name: Print result of terraform destroy
+  debug:
+    msg: "{{destroy}}"
+
+- name: Destroy BIG-IPs Terraform ../terraform/BIG_IPsNew
+  shell: |
+    cd {{terraform_path}}/{{upgradeBIGIP}};
+    {{awsCreds}}
+    terraform destroy --auto-approve
+  register: destroy
+
+- name: Delete artifacts
+  file:
+    state: absent
+    path: ../artifacts/BIG_IPs
+
+- name: Delete artifacts BIG-IPsNew
+  file:
+    state: absent
+    path: ../artifacts/BIG_IPsNew
+
+- name: Delete appRepo
+  file:
+    state: absent
+    path: ../appRepo
+
+- name: Create the artifacts/BIG_IPs directory
+  file:
+    path: "../artifacts/BIG_IPs"
+    state: directory
+
+- name: Create the artifacts/BIG_IPsNew directory
+  file:
+    path: "../artifacts/BIG_IPsNew"
+    state: directory
+
+- name: Create appRepo
+  file:
+    path: "../appRepo"
+    state: directory

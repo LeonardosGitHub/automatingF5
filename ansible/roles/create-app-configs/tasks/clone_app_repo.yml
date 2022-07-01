@@ -1,0 +1,34 @@
+- name: Delete the tmp directory if exists
+  file:
+    path: "tmp"
+    state: absent
+
+- name: Create the tmp directory
+  file:
+    path: "tmp/app-inputs"
+    state: directory
+
+- name: Create the tmp directory
+  file:
+    path: "tmp/appDeploy"
+    state: directory
+
+- name: Create tmp Directory for Declarations
+  file:
+    path: "tmp/declarations"
+    state: directory
+
+- name: Find yml files
+  find: 
+    paths: "~/automatingF5/ansible/appRepo/"
+    recurse: no
+    patterns: "*.yml"
+  register: file_to_copy
+  
+- name: Copy file 
+  copy:
+    src: "{{ item.path }}"
+    dest: "tmp/app-inputs"
+  with_items: "{{ file_to_copy.files }}"
+
+

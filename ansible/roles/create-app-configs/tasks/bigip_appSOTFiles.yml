@@ -1,0 +1,7 @@
+---
+- name: create app SOT files
+  template:
+    src: ../templates/template_appSOT.j2
+    dest: ../appRepo/app{{item.number}}.yml
+  with_items:
+    - { number: 20, port: 80, vipAddr: "{{vipAddressActive}}", pool1: "{{terraform_outputs_bigip.appServer1.value}}", pool2: "{{terraform_outputs_bigip.appServer2.value}}" }

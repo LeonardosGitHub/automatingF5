@@ -1,0 +1,15 @@
+app{{item.number}}:
+  app_name: app{{item.number}}
+  tenant: lineOfBusiness{{item.number}}
+  app_template: template_as3_web_app
+  server_port: {{item.port}}
+  app_fqdn: app{{item.number}}.example.com
+  app_locations:
+    datacenter_name: virtual_DataCenter
+    prod_vip_address: {{item.vipAddr}}
+    alternate_vip_address: {{item.vipAddr}}
+    pool_members:
+      - ip: {{item.pool1}}
+        state: enable
+      - ip: {{item.pool2}}
+        state: enable

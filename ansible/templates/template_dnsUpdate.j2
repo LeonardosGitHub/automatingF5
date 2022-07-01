@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "name": "demo.leonardosimon.com",
+    "namespace": "system",
+    "labels": {},
+    "annotations": {}
+  },
+  "spec": {
+    "primary": {
+      "default_soa_parameters": {},
+      "rr_set_group": [],
+      "default_rr_set_group": [
+        {
+          "ttl": 86400,
+          "ns_record": {
+            "values": [
+              "ns1.f5clouddns.com",
+              "ns2.f5clouddns.com"
+            ]
+          }
+        },
+        {
+          "ttl": 60,
+          "a_record": {
+            "values": [
+              "{{terraform_outputs_bigip.public_vip_pip.value}}"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

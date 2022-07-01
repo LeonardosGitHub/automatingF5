@@ -1,0 +1,14 @@
+---
+
+- name: Push AS3 and update DNS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+
+  vars_files:
+    - ../vars/ansible_vars.yml
+
+  roles:
+    - create-app-configs
+    
